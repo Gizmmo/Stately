@@ -40,7 +40,6 @@ namespace Stately
         /// <summary>
         /// Removes a transition for the transitions array
         /// </summary>
-        /// <typeparam name="T"></typeparam>
         /// <returns>true if the transition was removed, otherwise false.</returns>
         bool RemoveTransition<TTransition>() where TTransition : ITransition;
 

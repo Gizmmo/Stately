@@ -18,6 +18,7 @@ namespace Stately.Tests
 
         protected void AddTransition(int transitionNum)
         {
+            // ReSharper disable once SwitchStatementMissingSomeCases
             switch (transitionNum)
             {
                 case 0:
@@ -34,6 +35,7 @@ namespace Stately.Tests
 
         protected void RemoveTransition(int transitionNum)
         {
+            // ReSharper disable once SwitchStatementMissingSomeCases
             switch (transitionNum)
             {
                 case 0:

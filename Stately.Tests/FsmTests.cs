@@ -21,6 +21,7 @@ namespace Stately.Tests
         /// <param name="state">Will add the State+1 to the state machine</param>
         protected void AddStateAt(int state)
         {
+            // ReSharper disable once SwitchStatementMissingSomeCases
             switch (state)
             {
                 case 0:
@@ -47,6 +48,7 @@ namespace Stately.Tests
         /// <param name="state">Will remove the State+1 from the state machine</param>
         protected void RemoveStateAt(int state)
         {
+            // ReSharper disable once SwitchStatementMissingSomeCases
             switch (state)
             {
                 case 0:
@@ -618,16 +620,14 @@ namespace Stately.Tests
             {
                 AmountOfEntryCalls++;
                 IsEntryCalled = true;
-                if (_testObject != null)
-                    _testObject.OnEntry();
+                _testObject?.OnEntry();
             }
 
             public virtual void OnExit()
             {
                 AmountOfExitCalls++;
                 IsExitCalled = true;
-                if (_testObject != null)
-                    _testObject.OnExit();
+                _testObject?.OnExit();
             }
 
             public void SetUpTransition(Action<Type> transitionMethod)
