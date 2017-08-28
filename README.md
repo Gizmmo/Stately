@@ -2,7 +2,7 @@
 
 Stately is a simple finite state machine created for use in Unity, but uses to UnityEngine components.  Below is some simple example code on how to set up and use an FSM.
 
-```
+```c#
 namespace Stately.Example
 {
     public class FsmExample
