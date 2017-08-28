@@ -42,12 +42,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FsmTests\AddStateTests.cs" />
+    <Compile Include="FsmTests\AddTransitionTests.cs" />
     <Compile Include="FsmTests\CurrentStateTests.cs" />
     <Compile Include="FsmTests\FsmTests.cs" />
-    <Compile Include="FsmTests\InitalizeTests.cs" />
+    <Compile Include="FsmTests\RemoveTransitionTests.cs" />
+    <Compile Include="FsmTests\SetInitialStateTests.cs" />
     <Compile Include="FsmTests\RemoveStateTests.cs" />
     <Compile Include="FsmTests\StartTests.cs" />
-    <Compile Include="FsmTests\TransitionTests.cs" />
+    <Compile Include="FsmTests\TriggerTransitionTests.cs" />
     <Compile Include="MockData\EntryExitTestObject.cs" />
     <Compile Include="MockData\States.cs" />
     <Compile Include="MockData\Transitions.cs" />

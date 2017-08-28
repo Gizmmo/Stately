@@ -4,7 +4,7 @@ using Stately.Tests.MockData;
 
 namespace Stately.Tests.FsmTests
 {
-    public class InitalizeTests : FsmTests
+    public class SetInitialStateTests : FsmTests
     {
         [Test]
         public void DoesInitalStateSetTheInitialState()
