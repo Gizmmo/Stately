@@ -41,12 +41,18 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FsmTests\AddStateTests.cs" />
+    <Compile Include="FsmTests\CurrentStateTests.cs" />
+    <Compile Include="FsmTests\FsmTests.cs" />
+    <Compile Include="FsmTests\InitalizeTests.cs" />
+    <Compile Include="FsmTests\RemoveStateTests.cs" />
+    <Compile Include="FsmTests\StartTests.cs" />
+    <Compile Include="FsmTests\TransitionTests.cs" />
     <Compile Include="MockData\EntryExitTestObject.cs" />
     <Compile Include="MockData\States.cs" />
     <Compile Include="MockData\Transitions.cs" />
     <Compile Include="StateContainerTests.cs" />
     <Compile Include="FsmStateTests.cs" />
-    <Compile Include="FsmTests.cs" />
     <Compile Include="FsmTransitionTests.cs" />
     <Compile Include="TransitionContainerTests.cs" />
   </ItemGroup>

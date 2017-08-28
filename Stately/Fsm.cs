@@ -6,7 +6,11 @@ namespace Stately
 {
     public class Fsm<T> : IFsm<T> where T : IState
     {
-                /// <summary>
+        private StateContainer _currentStateContainer;
+
+        private readonly Dictionary<Type, StateContainer> _states = new Dictionary<Type, StateContainer>();
+        
+        /// <summary>
         /// Gets the amount of states stored in the Fsm
         /// </summary>
         public int StateCount => _states.Count;
@@ -25,10 +29,6 @@ namespace Stately
         /// Returns true if the Fsm has started
         /// </summary>
         public bool IsStarted { get; private set; }
-
-        private StateContainer _currentStateContainer;
-
-        private readonly Dictionary<Type, StateContainer> _states = new Dictionary<Type, StateContainer>();
 
 
         /// <summary>
