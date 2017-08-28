@@ -1,6 +1,6 @@
 ﻿namespace Stately.Tests
 {
-    public class FsmTransitionTests
+    public class TransitionTests
     {
 
     }

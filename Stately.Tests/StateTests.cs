@@ -3,7 +3,7 @@
 namespace Stately.Tests
 {
     [TestFixture]
-    public class FsmStateTests
+    public class StateTests
     {
         private Fsm<ConcreteState> _fsm;
 

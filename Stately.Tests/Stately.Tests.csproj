@@ -54,8 +54,8 @@
     <Compile Include="MockData\States.cs" />
     <Compile Include="MockData\Transitions.cs" />
     <Compile Include="StateContainerTests.cs" />
-    <Compile Include="FsmStateTests.cs" />
-    <Compile Include="FsmTransitionTests.cs" />
+    <Compile Include="StateTests.cs" />
+    <Compile Include="TransitionTests.cs" />
     <Compile Include="TransitionContainerTests.cs" />
   </ItemGroup>
   <ItemGroup>
