@@ -1,5 +1,5 @@
-﻿using System;
-using NUnit.Framework;
+﻿using NUnit.Framework;
+using Stately.Tests.MockData;
 
 namespace Stately.Tests
 {
@@ -49,57 +49,6 @@ namespace Stately.Tests
 
             //Assert
             Assert.That(_container.StateTo, Is.EqualTo(stateToPassedType));
-        }
-    }
-
-    public class StateOne : IState
-    {
-        public void OnEntry()
-        {
-        }
-
-        public void OnExit()
-        {
-        }
-
-        public void SetUpTransition(Action<Type> transitionMethod)
-        {
-        }
-    }
-
-    public class StateTwo : IState
-    {
-        public void OnEntry()
-        {
-        }
-
-        public void OnExit()
-        {
-        }
-
-        public void SetUpTransition(Action<Type> transitionMethod)
-        {
-        }
-    }
-
-    public class TransitionOne : ITransition
-    {
-        public void Trigger()
-        {
-        }
-    }
-
-    public class TransitionTwo : ITransition
-    {
-        public void Trigger()
-        {
-        }
-    }
-
-    public class TransitionThree : ITransition
-    {
-        public void Trigger()
-        {
         }
     }
 }

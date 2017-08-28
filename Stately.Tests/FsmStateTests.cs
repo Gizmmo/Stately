@@ -19,7 +19,7 @@ namespace Stately.Tests
         }
 
         [Test]
-        public void DoesCallingAMethodThatCallsTriggerTransitioncauseTheFsmToChangeStates()
+        public void DoesCallingAMethodThatCallsTriggerTransitionCauseTheFsmToChangeStates()
         {
             //Arrange
             var stateTwo = typeof(StateTwo);

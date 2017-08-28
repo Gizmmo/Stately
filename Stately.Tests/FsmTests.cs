@@ -1,5 +1,6 @@
-﻿using System;
-using NUnit.Framework;
+﻿using NUnit.Framework;
+using Stately.Exceptions;
+using Stately.Tests.MockData;
 
 namespace Stately.Tests
 {
@@ -320,13 +321,6 @@ namespace Stately.Tests
 
         public abstract class TransitionTests : FsmTests
         {
-            protected static bool TriggerCalled;
-
-            public override void Init()
-            {
-                base.Init();
-                TriggerCalled = false;
-            }
 
             public class AddTransitionTests : TransitionTests
             {
@@ -345,7 +339,7 @@ namespace Stately.Tests
 
                 private void AddSimpleTransition()
                 {
-                    _fsm.AddTransition<StateOne, StateTwo>(new StateOneToStateTwoTransition());
+                    _fsm.AddTransition<StateOne, StateTwo>(new TransitionOne());
                 }
 
                 [Test]
@@ -387,16 +381,16 @@ namespace Stately.Tests
                     //Arrange
                     AddStateAt(0);
                     AddStateAt(1);
-
-                    _fsm.AddTransition<StateOne, StateTwo>(new StateOneToStateTwoTransition());
+                    var stateTransition = new TransitionOne();
+                    _fsm.AddTransition<StateOne, StateTwo>(stateTransition);
                     _fsm.SetInitialState<StateOne>();
                     _fsm.Start();
 
                     //Act
-                    _fsm.TriggerTransition<StateOneToStateTwoTransition>();
+                    _fsm.TriggerTransition<TransitionOne>();
 
                     //Assert
-                    Assert.That(TriggerCalled, Is.True);
+                    Assert.That(stateTransition.IsTriggered, Is.True);
                 }
 
                 [Test]
@@ -406,13 +400,13 @@ namespace Stately.Tests
                     AddStateAt(0);
                     AddStateAt(1);
 
-                    _fsm.AddTransition<StateOne, StateTwo>(new StateOneToStateTwoTransition());
+                    _fsm.AddTransition<StateOne, StateTwo>(new TransitionOne());
                     _fsm.SetInitialState<StateOne>();
 
                     //Act
 
                     //Assert
-                    Assert.Throws<StateMachineNotStartedException>(_fsm.TriggerTransition<StateOneToStateTwoTransition>);
+                    Assert.Throws<StateMachineNotStartedException>(_fsm.TriggerTransition<TransitionOne>);
                 }
 
                 [Test]
@@ -422,12 +416,12 @@ namespace Stately.Tests
                     AddStateAt(0);
                     AddStateAt(1);
 
-                    _fsm.AddTransition<StateOne, StateTwo>(new StateOneToStateTwoTransition());
+                    _fsm.AddTransition<StateOne, StateTwo>(new TransitionOne());
                     _fsm.SetInitialState<StateOne>();
                     _fsm.Start();
 
                     //Act
-                    _fsm.TriggerTransition<StateOneToStateTwoTransition>();
+                    _fsm.TriggerTransition<TransitionOne>();
                     var entryInSecondState = ((StateTwo) _fsm.State).IsUniqueEntryCalled;
 
                     //Assert
@@ -441,12 +435,12 @@ namespace Stately.Tests
                     AddStateAt(0);
                     AddStateAt(1);
 
-                    _fsm.AddTransition<StateOne, StateTwo>(new StateOneToStateTwoTransition());
+                    _fsm.AddTransition<StateOne, StateTwo>(new TransitionOne());
                     _fsm.SetInitialState<StateOne>();
                     _fsm.Start();
 
                     //Act
-                    _fsm.TriggerTransition<StateOneToStateTwoTransition>();
+                    _fsm.TriggerTransition<TransitionOne>();
 
                     //Assert
                     Assert.That(_fsm.State.AmountOfEntryCalls, Is.EqualTo(1));
@@ -459,13 +453,13 @@ namespace Stately.Tests
                     AddStateAt(0);
                     AddStateAt(1);
 
-                    _fsm.AddTransition<StateOne, StateTwo>(new StateOneToStateTwoTransition());
+                    _fsm.AddTransition<StateOne, StateTwo>(new TransitionOne());
                     _fsm.SetInitialState<StateOne>();
                     _fsm.Start();
                     var firstState = _fsm.State;
 
                     //Act
-                    _fsm.TriggerTransition<StateOneToStateTwoTransition>();
+                    _fsm.TriggerTransition<TransitionOne>();
 
                     //Assert
                     Assert.That(firstState.AmountOfEntryCalls, Is.EqualTo(1));
@@ -478,13 +472,13 @@ namespace Stately.Tests
                     AddStateAt(0);
                     AddStateAt(1);
 
-                    _fsm.AddTransition<StateOne, StateTwo>(new StateOneToStateTwoTransition());
+                    _fsm.AddTransition<StateOne, StateTwo>(new TransitionOne());
                     _fsm.SetInitialState<StateOne>();
                     _fsm.Start();
                     var firstState = _fsm.State;
 
                     //Act
-                    _fsm.TriggerTransition<StateOneToStateTwoTransition>();
+                    _fsm.TriggerTransition<TransitionOne>();
 
                     //Assert
                     Assert.That(firstState.IsExitCalled, Is.True);
@@ -497,13 +491,13 @@ namespace Stately.Tests
                     AddStateAt(0);
                     AddStateAt(1);
 
-                    _fsm.AddTransition<StateOne, StateTwo>(new StateOneToStateTwoTransition());
+                    _fsm.AddTransition<StateOne, StateTwo>(new TransitionOne());
                     _fsm.SetInitialState<StateOne>();
                     _fsm.Start();
                     var firstState = _fsm.State;
 
                     //Act
-                    _fsm.TriggerTransition<StateOneToStateTwoTransition>();
+                    _fsm.TriggerTransition<TransitionOne>();
 
                     //Assert
                     Assert.That(firstState.AmountOfExitCalls, Is.EqualTo(1));
@@ -517,12 +511,12 @@ namespace Stately.Tests
                     _fsm.AddState(new StateOne(testObject));
                     _fsm.AddState(new StateTwo(testObject));
 
-                    _fsm.AddTransition<StateOne, StateTwo>(new StateOneToStateTwoTransition());
+                    _fsm.AddTransition<StateOne, StateTwo>(new TransitionOne());
                     _fsm.SetInitialState<StateOne>();
                     _fsm.Start();
 
                     //Act
-                    _fsm.TriggerTransition<StateOneToStateTwoTransition>();
+                    _fsm.TriggerTransition<TransitionOne>();
 
                     //Assert
                     Assert.That(testObject.ExitCalledBeforeSecondEntry, Is.True);
@@ -538,10 +532,10 @@ namespace Stately.Tests
                     AddStateAt(0);
                     AddStateAt(1);
 
-                    _fsm.AddTransition<StateOne, StateTwo>(new StateOneToStateTwoTransition());
+                    _fsm.AddTransition<StateOne, StateTwo>(new TransitionOne());
 
                     //Act
-                    var returnValueOfRemove = _fsm.RemoveTransition<StateOneToStateTwoTransition, StateOne>();
+                    var returnValueOfRemove = _fsm.RemoveTransition<TransitionOne, StateOne>();
 
                     //Assert
                     Assert.That(returnValueOfRemove, Is.True);
@@ -555,7 +549,7 @@ namespace Stately.Tests
                     AddStateAt(1);
 
                     //Act
-                    var returnValueOfRemove = _fsm.RemoveTransition<StateOneToStateTwoTransition, StateOne>();
+                    var returnValueOfRemove = _fsm.RemoveTransition<TransitionOne, StateOne>();
 
                     //Assert
                     Assert.That(returnValueOfRemove, Is.False);
@@ -569,175 +563,15 @@ namespace Stately.Tests
                     AddStateAt(1);
                     _fsm.SetInitialState<StateOne>();
                     _fsm.Start();
-                    _fsm.AddTransition<StateOne, StateTwo>(new StateOneToStateTwoTransition());
+                    _fsm.AddTransition<StateOne, StateTwo>(new TransitionOne());
 
                     //Act
-                    _fsm.RemoveTransition<StateOneToStateTwoTransition, StateOne>();
+                    _fsm.RemoveTransition<TransitionOne, StateOne>();
 
 
                     //Assert
-                    Assert.Throws<TransitionNotFoundException>(_fsm.TriggerTransition<StateOneToStateTwoTransition>);
+                    Assert.Throws<TransitionNotFoundException>(_fsm.TriggerTransition<TransitionOne>);
                 }
-            }
-
-
-            public class StateOneToStateTwoTransition : ITransition
-            {
-                public void Trigger()
-                {
-                    TriggerCalled = true;
-                }
-            }
-        }
-
-
-        public abstract class ConcreteState : IState
-        {
-            public bool IsEntryCalled { get; private set; }
-            public bool IsExitCalled { get; private set; }
-            public int AmountOfEntryCalls { get; private set; }
-            public int AmountOfExitCalls { get; private set; }
-
-            private readonly EntryExitTestObject _testObject;
-
-            protected ConcreteState()
-            {
-            }
-
-            protected ConcreteState(EntryExitTestObject testObject)
-            {
-                _testObject = testObject;
-            }
-
-            public int ReturnZero()
-            {
-                return 0;
-            }
-
-            public abstract int ReturnStateNumber();
-
-            public virtual void OnEntry()
-            {
-                AmountOfEntryCalls++;
-                IsEntryCalled = true;
-                _testObject?.OnEntry();
-            }
-
-            public virtual void OnExit()
-            {
-                AmountOfExitCalls++;
-                IsExitCalled = true;
-                _testObject?.OnExit();
-            }
-
-            public void SetUpTransition(Action<Type> transitionMethod)
-            {
-            }
-        }
-
-        public class StateOne : ConcreteState
-        {
-            public override int ReturnStateNumber()
-            {
-                return 1;
-            }
-
-            public StateOne()
-            {
-            }
-
-            public StateOne(EntryExitTestObject testObject) : base(testObject)
-            {
-            }
-        }
-
-        public class StateTwo : ConcreteState
-        {
-            public bool IsUniqueEntryCalled { get; private set; }
-
-            public override int ReturnStateNumber()
-            {
-                return 2;
-            }
-
-            public override void OnEntry()
-            {
-                base.OnEntry();
-                IsUniqueEntryCalled = true;
-            }
-
-            public StateTwo(EntryExitTestObject testObject) : base(testObject)
-            {
-            }
-
-            public StateTwo()
-            {
-            }
-        }
-
-        public class StateThree : ConcreteState
-        {
-            public override int ReturnStateNumber()
-            {
-                return 3;
-            }
-
-            public StateThree(EntryExitTestObject testObject) : base(testObject)
-            {
-            }
-
-            public StateThree()
-            {
-            }
-        }
-
-        public class StateFour : ConcreteState
-        {
-            public override int ReturnStateNumber()
-            {
-                return 4;
-            }
-
-            public StateFour(EntryExitTestObject testObject) : base(testObject)
-            {
-            }
-
-            public StateFour()
-            {
-            }
-        }
-
-        public class StateFive : ConcreteState
-        {
-            public override int ReturnStateNumber()
-            {
-                return 5;
-            }
-
-            public StateFive(EntryExitTestObject testObject) : base(testObject)
-            {
-            }
-
-            public StateFive()
-            {
-            }
-        }
-
-        public class EntryExitTestObject
-        {
-            private int _amountOfEntries;
-
-            public bool ExitCalledBeforeSecondEntry { get; private set; }
-
-            public void OnEntry()
-            {
-                _amountOfEntries++;
-            }
-
-            public void OnExit()
-            {
-                if (_amountOfEntries < 2)
-                    ExitCalledBeforeSecondEntry = true;
             }
         }
     }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Stately.Exceptions;
 
 namespace Stately
 {
@@ -138,10 +139,7 @@ namespace Stately
         /// <returns>True if the transition was removed, false otherwise</returns>
         public bool RemoveTransition<TTransition, TState>()
             where TTransition : ITransition
-            where TState : T
-        {
-            return GetStateContiainer(typeof (TState)).RemoveTransition<TTransition>();
-        }
+            where TState : T => GetStateContiainer(typeof (TState)).RemoveTransition<TTransition>();
 
         /// <summary>
         /// Sets the current state to the passed state Type.
@@ -178,174 +176,11 @@ namespace Stately
         /// </summary>
         /// <param name="key">The state name</param>
         /// <returns>true if the state is in the Fsm, false otherwise</returns>
-        internal bool IsStateFound(Type key)
-        {
-            return _states.ContainsKey(key);
-        }
+        internal bool IsStateFound(Type key) => _states.ContainsKey(key);
 
         /// <summary>
         /// Throws a StateNotFoundException
         /// </summary>
-        internal void StateNotFound()
-        {
-            throw new StateNotFoundException();
-        }
-    }
-    
-    /// <summary>
-    /// Thrown when an inital state is not set for start up.
-    /// </summary>
-    public class InitalStateNullException : Exception
-    {
-        public InitalStateNullException()
-        {
-        }
-
-        public InitalStateNullException(string message)
-            : base(message)
-        {
-        }
-
-        public InitalStateNullException(string message, Exception inner)
-            : base(message, inner)
-        {
-        }
-    }
-
-    /// <summary>
-    /// Thrown when a state does not exist is trying to be accessed.
-    /// </summary>
-    public class StateNotFoundException : Exception
-    {
-        public StateNotFoundException()
-        {
-        }
-
-        public StateNotFoundException(string message)
-            : base(message)
-        {
-        }
-
-        public StateNotFoundException(string message, Exception inner)
-            : base(message, inner)
-        {
-        }
-    }
-
-    /// <summary>
-    /// Thrown when a state is being removed that is set as the current state.
-    /// </summary>
-    public class RemoveCurrentStateException : Exception
-    {
-        public RemoveCurrentStateException()
-        {
-        }
-
-        public RemoveCurrentStateException(string message)
-            : base(message)
-        {
-        }
-
-        public RemoveCurrentStateException(string message, Exception inner)
-            : base(message, inner)
-        {
-        }
-    }
-
-    /// <summary>
-    /// Thrown when a state of the type has already been added to the state machine
-    /// </summary>
-    public class DuplicateStateException : Exception
-    {
-        public DuplicateStateException()
-        {
-        }
-
-        public DuplicateStateException(string message)
-            : base(message)
-        {
-        }
-
-        public DuplicateStateException(string message, Exception inner)
-            : base(message, inner)
-        {
-        }
-    }
-
-    /// <summary>
-    /// Thrown when a state of the type has already been added to the state machine
-    /// </summary>
-    public class DuplicateStateTransitionException : Exception
-    {
-        public DuplicateStateTransitionException()
-        {
-        }
-
-        public DuplicateStateTransitionException(string message)
-            : base(message)
-        {
-        }
-
-        public DuplicateStateTransitionException(string message, Exception inner)
-            : base(message, inner)
-        {
-        }
-    }
-
-    /// <summary>
-    /// Thrown when a state of the type has already been added to the state machine
-    /// </summary>
-    public class TransitionNotFoundException : Exception
-    {
-        public TransitionNotFoundException()
-        {
-        }
-
-        public TransitionNotFoundException(string message)
-            : base(message)
-        {
-        }
-
-        public TransitionNotFoundException(string message, Exception inner)
-            : base(message, inner)
-        {
-        }
-    }
-
-    /// <summary>
-    /// Thrown when a state of the type has already been added to the state machine
-    /// </summary>
-    public class StateMachineNotStartedException : Exception
-    {
-        public StateMachineNotStartedException()
-        {
-        }
-
-        public StateMachineNotStartedException(string message)
-            : base(message)
-        {
-        }
-
-        public StateMachineNotStartedException(string message, Exception inner)
-            : base(message, inner)
-        {
-        }
-    }
-
-    public class InvalidTransitionTypeException : Exception
-    {
-        public InvalidTransitionTypeException()
-        {
-        }
-
-        public InvalidTransitionTypeException(string message)
-            : base(message)
-        {
-        }
-
-        public InvalidTransitionTypeException(string message, Exception inner)
-            : base(message, inner)
-        {
-        }
+        internal void StateNotFound() => throw new StateNotFoundException();
     }
 }

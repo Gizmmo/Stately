@@ -41,6 +41,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MockData\EntryExitTestObject.cs" />
+    <Compile Include="MockData\States.cs" />
+    <Compile Include="MockData\Transitions.cs" />
     <Compile Include="StateContainerTests.cs" />
     <Compile Include="FsmStateTests.cs" />
     <Compile Include="FsmTests.cs" />

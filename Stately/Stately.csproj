@@ -33,6 +33,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Exceptions\DuplicateStateException.cs" />
+    <Compile Include="Exceptions\DuplicateStateTransitionException.cs" />
+    <Compile Include="Exceptions\InitalStateNullException.cs" />
+    <Compile Include="Exceptions\InvalidTransitionTypeException.cs" />
+    <Compile Include="Exceptions\RemoveCurrentStateException.cs" />
+    <Compile Include="Exceptions\StateMachineNotStartedException.cs" />
+    <Compile Include="Exceptions\StateNotFoundException.cs" />
+    <Compile Include="Exceptions\TransitionNotFoundException.cs" />
     <Compile Include="Fsm.cs" />
     <Compile Include="FsmState.cs" />
     <Compile Include="FsmTransition.cs" />

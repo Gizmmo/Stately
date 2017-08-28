@@ -1,5 +1,6 @@
-﻿using System;
-using NUnit.Framework;
+﻿using NUnit.Framework;
+using Stately.Exceptions;
+using Stately.Tests.MockData;
 
 namespace Stately.Tests
 {
@@ -22,13 +23,13 @@ namespace Stately.Tests
             switch (transitionNum)
             {
                 case 0:
-                    _container.AddTransition(new TransitionOne(), typeof (FsmTests.StateTwo));
+                    _container.AddTransition(new TransitionOne(), typeof (StateTwo));
                     break;
                 case 1:
-                    _container.AddTransition(new TransitionTwo(), typeof (FsmTests.StateTwo));
+                    _container.AddTransition(new TransitionTwo(), typeof (StateTwo));
                     break;
                 case 2:
-                    _container.AddTransition(new TransitionThree(), typeof (FsmTests.StateTwo));
+                    _container.AddTransition(new TransitionThree(), typeof (StateTwo));
                     break;
             }
         }
@@ -107,7 +108,7 @@ namespace Stately.Tests
             {
                 //Arrange
                 var originalTransition = new TransitionOne();
-                _container.AddTransition(originalTransition, typeof (FsmTests.StateTwo));
+                _container.AddTransition(originalTransition, typeof (StateTwo));
 
                 //Act
                 var returnedTransition = _container.GetTransition<TransitionOne>().Transition;
@@ -120,7 +121,7 @@ namespace Stately.Tests
             public void DoesGetTransitionReturnTheExpectedStateToInTheContainer()
             {
                 //Arrange
-                var originalStateTo = typeof (FsmTests.StateTwo);
+                var originalStateTo = typeof (StateTwo);
                 _container.AddTransition(new TransitionOne(), originalStateTo);
 
                 //Act
@@ -191,7 +192,7 @@ namespace Stately.Tests
             public void DoesCallingTriggerOnATransitionReturnTheStateTo()
             {
                 //Arrange
-                var stateThatIsSet = typeof (FsmTests.StateTwo);
+                var stateThatIsSet = typeof (StateTwo);
                 _container.AddTransition(new TransitionOne(), stateThatIsSet);
 
                 //Act
@@ -204,14 +205,15 @@ namespace Stately.Tests
             [Test]
             public void DoesCallingTriggerOnATransitionCallTheTriggerMethod()
             {
+                var transition = new TransitionOne();
                 //Arrange
-                _container.AddTransition(new TransitionOne(), typeof (FsmTests.StateTwo));
+                _container.AddTransition(transition, typeof (StateTwo));
 
                 //Act
                 _container.TriggerTransition<TransitionOne>();
 
                 //Assert
-                Assert.That(_wasTriggered, Is.True);
+                Assert.That(transition.IsTriggered, Is.True);
             }
 
             [Test]
@@ -253,49 +255,7 @@ namespace Stately.Tests
             /// </summary>
             private void AddSimpleTransition()
             {
-                _container.AddTransition(new TransitionOne(), typeof (FsmTests.StateTwo));
-            }
-        }
-
-        public class TestState : IState
-        {
-            public int ReturnZero()
-            {
-                return 0;
-            }
-
-            public void OnEntry()
-            {
-            }
-
-            public void OnExit()
-            {
-            }
-
-            public void SetUpTransition(Action<Type> transitionMethod)
-            {
-            }
-        }
-
-        public class TransitionOne : ITransition
-        {
-            public void Trigger()
-            {
-                _wasTriggered = true;
-            }
-        }
-
-        public class TransitionTwo : ITransition
-        {
-            public void Trigger()
-            {
-            }
-        }
-
-        public class TransitionThree : ITransition
-        {
-            public void Trigger()
-            {
+                _container.AddTransition(new TransitionOne(), typeof (StateTwo));
             }
         }
     }
