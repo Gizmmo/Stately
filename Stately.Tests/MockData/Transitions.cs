@@ -1,6 +1,6 @@
 ﻿namespace Stately.Tests.MockData
 {   
-    public class TransitionOne : FsmTransition
+    public class TransitionOne : Transition
     {
         public bool IsTriggered;
 
@@ -8,7 +8,7 @@
         public override void Trigger() => IsTriggered = true;
     }
 
-    public class TransitionTwo : FsmTransition
+    public class TransitionTwo : Transition
     {
         /// <inheritdoc />
         public override void Trigger()
@@ -16,7 +16,7 @@
         }
     }
 
-    public class TransitionThree : FsmTransition
+    public class TransitionThree : Transition
     {
         /// <inheritdoc />
         public override void Trigger()

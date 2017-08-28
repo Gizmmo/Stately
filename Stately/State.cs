@@ -2,7 +2,7 @@
 
 namespace Stately
 {
-    public abstract class FsmState : IState
+    public abstract class State : IState
     {
 
         private Action<Type> _transitionAction;

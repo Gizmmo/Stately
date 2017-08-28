@@ -1,6 +1,6 @@
 ﻿namespace Stately
 {
-    public class FsmTransition : ITransition
+    public class Transition : ITransition
     {
         public virtual void Trigger()
         {

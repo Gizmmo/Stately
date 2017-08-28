@@ -24,7 +24,7 @@
         }
 
 
-        public abstract class ConcreteClass : FsmState
+        public abstract class ConcreteClass : State
         {
             protected StateData Data;
 
@@ -62,11 +62,11 @@
             }
         }
 
-        public class ReadyToAction : FsmTransition
+        public class ReadyToAction : Transition
         {
         }
 
-        public class Stop : FsmTransition
+        public class Stop : Transition
         {
         }
 

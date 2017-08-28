@@ -32,7 +32,7 @@ namespace Stately.Tests
             Assert.That(currentStateOfStateMachine, Is.EqualTo(stateTwo));
         }
 
-        public class ConcreteState : FsmState
+        public class ConcreteState : State
         {
             public virtual void ChangeToTwo()
             {
