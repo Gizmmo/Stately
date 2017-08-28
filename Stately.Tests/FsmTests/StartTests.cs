@@ -29,7 +29,7 @@ namespace Stately.Tests.FsmTests
         public void IsCurrentStateNullBeforeStartIsCalled()
         {
             //Assert
-            Assert.That(StateMachine.State, Is.Null);
+            Assert.That(StateMachine.CurrentState, Is.Null);
         }
 
         [Test]
@@ -49,7 +49,7 @@ namespace Stately.Tests.FsmTests
             //Act
             StateMachine.SetInitialState<StateOne>();
             StateMachine.Start();
-            var currentStateType = StateMachine.State.GetType();
+            var currentStateType = StateMachine.CurrentState.GetType();
 
             //Assert
             Assert.That(currentStateType, Is.EqualTo(initialStateType));

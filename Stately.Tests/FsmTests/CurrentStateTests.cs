@@ -20,7 +20,7 @@ namespace Stately.Tests.FsmTests
 
             //Act
             StateMachine.Start();
-            var sharedMethodWasCalled = returnNumber == StateMachine.State.ReturnZero();
+            var sharedMethodWasCalled = returnNumber == StateMachine.CurrentState.ReturnZero();
 
             //Assert
             Assert.That(sharedMethodWasCalled);
@@ -34,7 +34,7 @@ namespace Stately.Tests.FsmTests
 
             //Act
             StateMachine.Start();
-            var overiddenMethodWasCalled = returnNumber == StateMachine.State.ReturnStateNumber();
+            var overiddenMethodWasCalled = returnNumber == StateMachine.CurrentState.ReturnStateNumber();
 
             //Assert
             Assert.That(overiddenMethodWasCalled);
@@ -47,7 +47,7 @@ namespace Stately.Tests.FsmTests
 
             //Act
             StateMachine.Start();
-            var entryWasCalled = StateMachine.State.IsEntryCalled;
+            var entryWasCalled = StateMachine.CurrentState.IsEntryCalled;
 
             //Assert
             Assert.That(entryWasCalled);

@@ -22,7 +22,7 @@ namespace Stately
         /// <summary>
         /// The current state the state machine is in
         /// </summary>
-        T State { get; }
+        T CurrentState { get; }
 
         /// <summary>
         /// Adds the passed state into the state machine

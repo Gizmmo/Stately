@@ -32,7 +32,7 @@ namespace Stately.Tests.FsmTests
         /// <summary>
         /// Adds the state to the state machine based on the number passed
         /// </summary>
-        /// <param name="state">Will add the State+1 to the state machine</param>
+        /// <param name="state">Will add the CurrentState+1 to the state machine</param>
         protected void AddStateAt(int state)
         {
             // ReSharper disable once SwitchStatementMissingSomeCases
@@ -59,7 +59,7 @@ namespace Stately.Tests.FsmTests
         /// <summary>
         /// removes the state from the state machine based on the number passed
         /// </summary>
-        /// <param name="state">Will remove the State+1 from the state machine</param>
+        /// <param name="state">Will remove the CurrentState+1 from the state machine</param>
         protected void RemoveStateAt(int state)
         {
             // ReSharper disable once SwitchStatementMissingSomeCases

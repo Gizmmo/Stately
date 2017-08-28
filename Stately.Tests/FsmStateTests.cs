@@ -25,8 +25,8 @@ namespace Stately.Tests
             var stateTwo = typeof(StateTwo);
             
             //Act
-            _fsm.State.ChangeToTwo();
-            var currentStateOfStateMachine = _fsm.State.GetType();
+            _fsm.CurrentState.ChangeToTwo();
+            var currentStateOfStateMachine = _fsm.CurrentState.GetType();
             
             //Assert
             Assert.That(currentStateOfStateMachine, Is.EqualTo(stateTwo));

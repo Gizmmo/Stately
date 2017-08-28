@@ -23,7 +23,7 @@ namespace Stately
         /// <summary>
         /// The current state the state machine is in
         /// </summary>
-        public T State { get; private set; }
+        public T CurrentState { get; private set; }
 
         /// <summary>
         /// Returns true if the Fsm has started
@@ -55,7 +55,7 @@ namespace Stately
         {
             var key = typeof (TSub);
 
-            if (State != null && State.GetType() == key)
+            if (CurrentState != null && CurrentState.GetType() == key)
                 throw new RemoveCurrentStateException();
 
             return _states.Remove(key);
@@ -149,15 +149,15 @@ namespace Stately
             var foundStateContainer = GetStateContiainer(state);
 
             if (IsStarted)
-                State.OnExit();
+                CurrentState.OnExit();
 
             _currentStateContainer = foundStateContainer;
-            State = (T) _currentStateContainer.State;
-            State.OnEntry();
+            CurrentState = (T) _currentStateContainer.State;
+            CurrentState.OnEntry();
         }
 
         /// <summary>
-        /// Returns the State Container for the passed state type
+        /// Returns the CurrentState Container for the passed state type
         /// </summary>
         /// <param name="state">The state type to find the container of</param>
         /// <returns>The state container of the passed state</returns>
