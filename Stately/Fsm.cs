@@ -42,7 +42,6 @@ namespace Stately
             if (_states.ContainsKey(key))
                 throw new DuplicateStateException();
 
-            state.SetUpTransition(TriggerTransition);
             _states.Add(key, new StateContainer(state));
         }
 

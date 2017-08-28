@@ -14,6 +14,5 @@ namespace Stately
         /// </summary>
         void OnExit();
 
-        void SetUpTransition(Action<Type> transitionMethod);
     }
 }
