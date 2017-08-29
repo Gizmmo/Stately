@@ -8,13 +8,11 @@ namespace Stately.Tests
     [Category("FsmStateContainer")]
     public class StateContainerTests
     {
-        private StateContainer _container;
-        private static bool _wasTriggered;
+        private StateContainer<ConcreteState> _container;
 
         [SetUp]
         public virtual void Init()
         {
-            _wasTriggered = false;
         }
 
         protected void AddTransition(int transitionNum)
@@ -57,9 +55,9 @@ namespace Stately.Tests
             public void DoesInitalizingAStateContainerWithAStateMakeTheStatePropertyThatState()
             {
                 //Arrange
-                var stateType = typeof (TestState);
+                var stateType = typeof (StateOne);
                 //Act
-                _container = new StateContainer(new TestState());
+                _container = new StateContainer<ConcreteState>(new StateOne());
                 var containerStateType = _container.State.GetType();
 
                 //Assert
@@ -72,7 +70,7 @@ namespace Stately.Tests
             public override void Init()
             {
                 base.Init();
-                _container = new StateContainer(new TestState());
+                _container = new StateContainer<ConcreteState>(new StateOne());
             }
 
             [Test]
@@ -270,12 +268,12 @@ namespace Stately.Tests
 
             private void GetNonTransitionClass()
             {
-                _container.GetTransition(typeof (TestState));
+                _container.GetTransition(typeof (StateOne));
             }
 
             private void TriggerNonTransitionClass()
             {
-                _container.TriggerTransition(typeof (TestState));
+                _container.TriggerTransition(typeof (StateOne));
             }
 
             /// <summary>

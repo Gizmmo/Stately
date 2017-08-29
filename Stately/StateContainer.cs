@@ -5,7 +5,7 @@ using Stately.Exceptions;
 
 namespace Stately
 {
-    public class StateContainer : IStateContainer
+    public class StateContainer<T> : IStateContainer<T> where T : IState
     {
         private readonly Dictionary<Type, ITransitionContainer> _transitions = new Dictionary<Type, ITransitionContainer>();
 
@@ -13,7 +13,7 @@ namespace Stately
         /// Contructor
         /// </summary>
         /// <param name="state">The state this container will store</param>
-        public StateContainer(IState state)
+        public StateContainer(T state)
         {
             State = state;
         }
@@ -21,7 +21,7 @@ namespace Stately
         /// <summary>
         /// The state that this container holds.
         /// </summary>
-        public IState State { get; }
+        public T State { get; }
 
         /// <summary>
         /// The amount of transitions stored in transition Dictionary.
@@ -47,11 +47,11 @@ namespace Stately
         /// <summary>
         /// Gets the transition from the transition container of the transtions dictionary
         /// </summary>
-        /// <typeparam name="T">The trpe of transition to get</typeparam>
+        /// <typeparam name="TTransition">The trpe of transition to get</typeparam>
         /// <returns>The transition of the type store</returns>
-        public ITransitionContainer GetTransition<T>() where T : ITransition
+        public ITransitionContainer GetTransition<TTransition>() where TTransition : ITransition
         {
-            return GetTransition(typeof (T));
+            return GetTransition(typeof (TTransition));
         }
 
         /// <summary>
@@ -73,21 +73,21 @@ namespace Stately
         /// <summary>
         /// Removes a transition for the transitions array
         /// </summary>
-        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="TTransition"></typeparam>
         /// <returns>true if the transition was removed, otherwise false.</returns>
-        public bool RemoveTransition<T>() where T : ITransition
+        public bool RemoveTransition<TTransition>() where TTransition : ITransition
         {
-            return _transitions.Remove(typeof (T));
+            return _transitions.Remove(typeof (TTransition));
         }
 
         /// <summary>
         /// Triggers the Transition searched for, and then return the state the fsm should go to.
         /// </summary>
-        /// <typeparam name="T">The transition to trigger.</typeparam>
+        /// <typeparam name="TTransition">The transition to trigger.</typeparam>
         /// <returns>The state the fsm should switch to in System.Type</returns>
-        public Type TriggerTransition<T>() where T : ITransition
+        public Type TriggerTransition<TTransition>() where TTransition : ITransition
         {
-            return TriggerTransition(typeof (T));
+            return TriggerTransition(typeof (TTransition));
         }
 
 
@@ -115,6 +115,6 @@ namespace Stately
                 throw new InvalidTransitionTypeException(transition.ToString());
         }
 
-        public bool HasTransition<T>() where T : IState => _transitions.Any(transition => transition.Value.StateTo == typeof(T));
+        public bool HasTransition<TStateTo>() where TStateTo : T => _transitions.Any(transition => transition.Value.StateTo == typeof(TStateTo));
     }
 }

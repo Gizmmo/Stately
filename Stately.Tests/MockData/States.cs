@@ -133,24 +133,4 @@ namespace Stately.Tests.MockData
             {
             }
         }
-    
-    public class TestState : IState
-    {
-        public int ReturnZero()
-        {
-            return 0;
-        }
-
-        public void OnEntry()
-        {
-        }
-
-        public void OnExit()
-        {
-        }
-
-        public void SetUpTransition(Action<Type> transitionMethod)
-        {
-        }
-    }
 }

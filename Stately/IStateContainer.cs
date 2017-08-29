@@ -2,12 +2,12 @@
 
 namespace Stately
 {
-    public interface IStateContainer
+    public interface IStateContainer<T> where T : IState
     {
         /// <summary>
         /// The state that this container holds.
         /// </summary>
-        IState State { get; }
+        T State { get; }
 
         /// <summary>
         /// The amount of transitions stored in transition Dictionary.
@@ -19,7 +19,7 @@ namespace Stately
         /// </summary>
         /// <typeparam name="T">The trpe of transition to get</typeparam>
         /// <returns>The transition of the type store</returns>
-        ITransitionContainer GetTransition<T>() where T : ITransition;
+        ITransitionContainer GetTransition<TTransition>() where TTransition : ITransition;
 
         /// <summary>
         /// Gets the transition from the transition container of the transtions dictionary
@@ -48,7 +48,7 @@ namespace Stately
         /// </summary>
         /// <typeparam name="T">The transition to trigger.</typeparam>
         /// <returns></returns>
-        Type TriggerTransition<T>() where T : ITransition;
+        Type TriggerTransition<TTransition>() where TTransition : ITransition;
 
         /// <summary>
         /// Triggers the Transition searched for, and then return the state the fsm should go to.
@@ -56,5 +56,7 @@ namespace Stately
         /// <param name="transition">The transition to trigger</param>
         /// <returns>The state the fsm should switch to in System.Type</returns>
         Type TriggerTransition(Type transition);
+
+        bool HasTransition<TStateTo>() where TStateTo : T;
     }
 }

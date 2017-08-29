@@ -6,9 +6,9 @@ namespace Stately
 {
     public class Fsm<T> : IFsm<T> where T : IState
     {
-        private StateContainer _currentStateContainer;
+        private StateContainer<T> _currentStateContainer;
 
-        private readonly Dictionary<Type, StateContainer> _states = new Dictionary<Type, StateContainer>();
+        private readonly Dictionary<Type, StateContainer<T>> _states = new Dictionary<Type, StateContainer<T>>();
         
         /// <summary>
         /// Gets the amount of states stored in the Fsm
@@ -23,7 +23,7 @@ namespace Stately
         /// <summary>
         /// The current state the state machine is in
         /// </summary>
-        public T CurrentState { get; private set; }
+        public T CurrentState => _currentStateContainer == null ? default(T): _currentStateContainer.State;
 
         /// <summary>
         /// Returns true if the Fsm has started
@@ -35,14 +35,14 @@ namespace Stately
         /// Adds the passed state into the state machine
         /// </summary>
         /// <param name="state">The state to put into the state machine</param>
-        public void AddState(IState state)
+        public void AddState<TSub>(TSub state) where TSub : T
         {
             var key = state.GetType();
 
             if (_states.ContainsKey(key))
                 throw new DuplicateStateException();
 
-            _states.Add(key, new StateContainer(state));
+            _states.Add(key, new StateContainer<T>(state));
         }
 
 
@@ -151,7 +151,6 @@ namespace Stately
                 CurrentState.OnExit();
 
             _currentStateContainer = foundStateContainer;
-            CurrentState = (T) _currentStateContainer.State;
             CurrentState.OnEntry();
         }
 
@@ -160,9 +159,9 @@ namespace Stately
         /// </summary>
         /// <param name="state">The state type to find the container of</param>
         /// <returns>The state container of the passed state</returns>
-        internal StateContainer GetStateContiainer(Type state)
+        internal StateContainer<T> GetStateContiainer(Type state)
         {
-            StateContainer foundState;
+            StateContainer<T> foundState;
 
             if (!_states.TryGetValue(state, out foundState))
                 StateNotFound();

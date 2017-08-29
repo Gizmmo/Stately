@@ -28,7 +28,7 @@ namespace Stately
         /// Adds the passed state into the state machine
         /// </summary>
         /// <param name="state">The state to put into the state machine</param>
-        void AddState(IState state);
+        void AddState<TSub>(TSub state) where TSub : T;
 
         /// <summary>
         /// Removes the passed state type from the state machine
