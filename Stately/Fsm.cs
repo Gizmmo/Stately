@@ -181,5 +181,9 @@ namespace Stately
         /// Throws a StateNotFoundException
         /// </summary>
         internal void StateNotFound() => throw new StateNotFoundException();
+
+        public bool HasTransition<TStateFrom, TStateTo>()
+            where TStateFrom : T
+            where TStateTo : T => GetStateContiainer(typeof(TStateFrom)).HasTransition<TStateTo>();
     }
 }

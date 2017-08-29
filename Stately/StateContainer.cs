@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Stately.Exceptions;
 
 namespace Stately
@@ -113,5 +114,7 @@ namespace Stately
             if (!typeof (ITransition).IsAssignableFrom(transition))
                 throw new InvalidTransitionTypeException(transition.ToString());
         }
+
+        public bool HasTransition<T>() where T : IState => _transitions.Any(transition => transition.Value.StateTo == typeof(T));
     }
 }

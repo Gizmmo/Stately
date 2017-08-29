@@ -53,5 +53,36 @@ namespace Stately.Tests.FsmTests
             //Assert
             Assert.Throws<DuplicateStateTransitionException>(AddSimpleTransition);
         }
+
+        [Test]
+        public void HasTransitionReturnsTrueIfATransitionWasAddedBetweenTwoStates()
+        {
+            //Arrange
+            AddStateAt(0);
+            AddStateAt(1);
+            AddSimpleTransition();
+            
+            //Act
+            var hasTransitionReturnsTrue = StateMachine.HasTransition<StateOne, StateTwo>();
+            
+            //Assert
+            Assert.That(hasTransitionReturnsTrue, Is.True);
+            
+        }
+        
+        [Test]
+        public void HasTransitionReturnsFalseIfATransitionWasNotAddedBetweenTwoStates()
+        {
+            //Arrange
+            AddStateAt(0);
+            AddStateAt(1);
+            
+            //Act
+            var hasTransitionReturnsFalse = !StateMachine.HasTransition<StateOne, StateTwo>();
+            
+            //Assert
+            Assert.That(hasTransitionReturnsFalse, Is.True);
+            
+        }
     }
 }

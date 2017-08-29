@@ -205,8 +205,8 @@ namespace Stately.Tests
             [Test]
             public void DoesCallingTriggerOnATransitionCallTheTriggerMethod()
             {
-                var transition = new TransitionOne();
                 //Arrange
+                var transition = new TransitionOne();
                 _container.AddTransition(transition, typeof (StateTwo));
 
                 //Act
@@ -233,6 +233,34 @@ namespace Stately.Tests
             public void DoesTiggerTransitionThrowAInvalidTransitionTypeExceptionWhenPassedAnIncorrectType()
             {
                 Assert.Throws<InvalidTransitionTypeException>(TriggerNonTransitionClass);
+            }
+            
+            [Test]
+            public void HasTransitionReturnsTrueIfATransitionWasAddedToAnotherState()
+            {
+                //Arrange
+                var transition = new TransitionOne();
+                _container.AddTransition(transition, typeof (StateTwo));
+            
+                //Act
+                var hasTransitionReturnsTrue = _container.HasTransition<StateTwo>();
+                    
+                //Assert
+                Assert.That(hasTransitionReturnsTrue, Is.True);
+            
+            }
+            
+            [Test]
+            public void HasTransitionReturnsFalseIfATransitionWasNotAddedToAnotherState()
+            {
+                //Arrange
+            
+                //Act
+                var hasTransitionReturnsFalse = _container.HasTransition<StateTwo>();
+                    
+                //Assert
+                Assert.That(hasTransitionReturnsFalse, Is.False);
+            
             }
             
             private void TriggerSimpleTransition()
