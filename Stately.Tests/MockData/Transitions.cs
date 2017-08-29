@@ -1,5 +1,12 @@
 ﻿namespace Stately.Tests.MockData
-{   
+{
+    public enum TransitionActions
+    {
+        TriggerOne,
+        TriggerTwo,
+        TriggerThree
+    }
+
     public class TransitionOne : Transition
     {
         public bool IsTriggered;

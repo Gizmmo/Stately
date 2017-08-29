@@ -8,8 +8,8 @@ namespace Stately.Tests
     [Category("FsmStateContainer")]
     public class StateContainerTests
     {
-        private StateContainer<ConcreteState> _container;
-
+        private StateContainer<ConcreteState, TransitionActions> _container;
+        
         [SetUp]
         public virtual void Init()
         {
@@ -21,13 +21,13 @@ namespace Stately.Tests
             switch (transitionNum)
             {
                 case 0:
-                    _container.AddTransition(new TransitionOne(), typeof (StateTwo));
+                    _container.AddTransition<StateTwo>(TransitionActions.TriggerOne, new TransitionOne());
                     break;
                 case 1:
-                    _container.AddTransition(new TransitionTwo(), typeof (StateTwo));
+                    _container.AddTransition<StateTwo>(TransitionActions.TriggerTwo, new TransitionOne());
                     break;
                 case 2:
-                    _container.AddTransition(new TransitionThree(), typeof (StateTwo));
+                    _container.AddTransition<StateTwo>(TransitionActions.TriggerThree, new TransitionOne());
                     break;
             }
         }
@@ -38,13 +38,13 @@ namespace Stately.Tests
             switch (transitionNum)
             {
                 case 0:
-                    _container.RemoveTransition<TransitionOne>();
+                    _container.RemoveTransition(TransitionActions.TriggerOne);
                     break;
                 case 1:
-                    _container.RemoveTransition<TransitionTwo>();
+                    _container.RemoveTransition(TransitionActions.TriggerTwo);
                     break;
                 case 2:
-                    _container.RemoveTransition<TransitionThree>();
+                    _container.RemoveTransition(TransitionActions.TriggerThree);
                     break;
             }
         }
@@ -57,7 +57,7 @@ namespace Stately.Tests
                 //Arrange
                 var stateType = typeof (StateOne);
                 //Act
-                _container = new StateContainer<ConcreteState>(new StateOne());
+                _container = new StateContainer<ConcreteState, TransitionActions>(new StateOne());
                 var containerStateType = _container.State.GetType();
 
                 //Assert
@@ -70,7 +70,7 @@ namespace Stately.Tests
             public override void Init()
             {
                 base.Init();
-                _container = new StateContainer<ConcreteState>(new StateOne());
+                _container = new StateContainer<ConcreteState, TransitionActions>(new StateOne());
             }
 
             [Test]
@@ -106,10 +106,10 @@ namespace Stately.Tests
             {
                 //Arrange
                 var originalTransition = new TransitionOne();
-                _container.AddTransition(originalTransition, typeof (StateTwo));
+                _container.AddTransition<StateTwo>(TransitionActions.TriggerOne, originalTransition);
 
                 //Act
-                var returnedTransition = _container.GetTransition<TransitionOne>().Transition;
+                var returnedTransition = _container.GetTransition(TransitionActions.TriggerOne).Transition;
 
                 //Assert
                 Assert.That(returnedTransition, Is.EqualTo(originalTransition));
@@ -120,10 +120,10 @@ namespace Stately.Tests
             {
                 //Arrange
                 var originalStateTo = typeof (StateTwo);
-                _container.AddTransition(new TransitionOne(), originalStateTo);
+                _container.AddTransition<StateTwo>(TransitionActions.TriggerOne,  new TransitionOne());
 
                 //Act
-                var returnedTransition = _container.GetTransition<TransitionOne>().StateTo;
+                var returnedTransition = _container.GetTransition(TransitionActions.TriggerOne).StateTo;
 
                 //Assert
                 Assert.That(returnedTransition, Is.EqualTo(originalStateTo));
@@ -137,7 +137,7 @@ namespace Stately.Tests
                 //Act
 
                 //Assert
-                Assert.Throws<TransitionNotFoundException>(() => { _container.GetTransition<TransitionOne>(); });
+                Assert.Throws<TransitionNotFoundException>(() => { _container.GetTransition(TransitionActions.TriggerOne); });
             }
 
             [Test]
@@ -168,7 +168,7 @@ namespace Stately.Tests
                 //Arrange
                 AddSimpleTransition();
                 //Act
-                var removeReturnValue = _container.RemoveTransition<TransitionOne>();
+                var removeReturnValue = _container.RemoveTransition(TransitionActions.TriggerOne);
 
                 //Assert
                 Assert.That(removeReturnValue, Is.True);
@@ -180,7 +180,7 @@ namespace Stately.Tests
                 //Arrange
 
                 //Act
-                var removeReturnValue = _container.RemoveTransition<TransitionOne>();
+                var removeReturnValue = _container.RemoveTransition(TransitionActions.TriggerOne);
 
                 //Assert
                 Assert.That(removeReturnValue, Is.False);
@@ -191,10 +191,10 @@ namespace Stately.Tests
             {
                 //Arrange
                 var stateThatIsSet = typeof (StateTwo);
-                _container.AddTransition(new TransitionOne(), stateThatIsSet);
+                _container.AddTransition<StateTwo>(TransitionActions.TriggerOne, new TransitionOne());
 
                 //Act
-                var stateToReturn = _container.TriggerTransition<TransitionOne>();
+                var stateToReturn = _container.TriggerTransition(TransitionActions.TriggerOne);
 
                 //Assert
                 Assert.That(stateToReturn, Is.EqualTo(stateThatIsSet));
@@ -205,10 +205,10 @@ namespace Stately.Tests
             {
                 //Arrange
                 var transition = new TransitionOne();
-                _container.AddTransition(transition, typeof (StateTwo));
+                _container.AddTransition<StateTwo>(TransitionActions.TriggerOne, transition);
 
                 //Act
-                _container.TriggerTransition<TransitionOne>();
+                _container.TriggerTransition(TransitionActions.TriggerOne);
 
                 //Assert
                 Assert.That(transition.IsTriggered, Is.True);
@@ -220,25 +220,13 @@ namespace Stately.Tests
                 //Assert
                 Assert.Throws<TransitionNotFoundException>(TriggerSimpleTransition);
             }
-
-            [Test]
-            public void DoesGetTransitionThrowAInvalidTransitionTypeExceptionWhenPassedAnIncorrectType()
-            {
-                Assert.Throws<InvalidTransitionTypeException>(GetNonTransitionClass);
-            }
-
-            [Test]
-            public void DoesTiggerTransitionThrowAInvalidTransitionTypeExceptionWhenPassedAnIncorrectType()
-            {
-                Assert.Throws<InvalidTransitionTypeException>(TriggerNonTransitionClass);
-            }
             
             [Test]
             public void HasTransitionReturnsTrueIfATransitionWasAddedToAnotherState()
             {
                 //Arrange
                 var transition = new TransitionOne();
-                _container.AddTransition(transition, typeof (StateTwo));
+                _container.AddTransition<StateTwo>(TransitionActions.TriggerOne, transition);
             
                 //Act
                 var hasTransitionReturnsTrue = _container.HasTransition<StateTwo>();
@@ -263,17 +251,7 @@ namespace Stately.Tests
             
             private void TriggerSimpleTransition()
             {
-                _container.TriggerTransition(typeof (TransitionOne));
-            }
-
-            private void GetNonTransitionClass()
-            {
-                _container.GetTransition(typeof (StateOne));
-            }
-
-            private void TriggerNonTransitionClass()
-            {
-                _container.TriggerTransition(typeof (StateOne));
+                _container.TriggerTransition(TransitionActions.TriggerOne);
             }
 
             /// <summary>
@@ -281,7 +259,7 @@ namespace Stately.Tests
             /// </summary>
             private void AddSimpleTransition()
             {
-                _container.AddTransition(new TransitionOne(), typeof (StateTwo));
+                _container.AddTransition<StateTwo>(TransitionActions.TriggerOne, new TransitionOne());
             }
         }
     }

@@ -7,12 +7,12 @@ namespace Stately.Tests.FsmTests
     [Category("FsmCore")]
     public class FsmTests
     {
-        protected Fsm<ConcreteState> StateMachine;
+        protected Fsm<ConcreteState, TransitionActions> StateMachine;
 
         [SetUp]
         public virtual void Init()
         {
-            StateMachine = new Fsm<ConcreteState>();
+            StateMachine = new Fsm<ConcreteState, TransitionActions>();
         }
         
         protected void AddStates(int stateCount)

@@ -21,7 +21,7 @@ namespace Stately.Tests.FsmTests
 
         private void AddSimpleTransition()
         {
-            StateMachine.AddTransition<StateOne, StateTwo>(new TransitionOne());
+            StateMachine.AddTransition<StateOne, StateTwo>(TransitionActions.TriggerOne, new TransitionOne());
         }
 
         [Test]
@@ -83,6 +83,24 @@ namespace Stately.Tests.FsmTests
             //Assert
             Assert.That(hasTransitionReturnsFalse, Is.True);
             
+        }
+
+        [Test]
+        public void DoesAddingATransitionUsingAnActionCreateANormalTransition()
+        {
+            //Arrange
+            AddStateAt(0);
+            AddStateAt(1);
+            var isChanged = false;
+            
+            //Act
+            StateMachine.AddTransition<StateOne, StateTwo>(TransitionActions.TriggerOne, () => isChanged = true);
+            StateMachine.SetInitialState<StateOne>();
+            StateMachine.Start();
+            StateMachine.TriggerTransition(TransitionActions.TriggerOne);
+            
+            //Assert
+            Assert.That(isChanged, Is.True);
         }
     }
 }

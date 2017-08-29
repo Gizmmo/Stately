@@ -13,12 +13,12 @@ namespace Stately.Tests.FsmTests
             AddStateAt(0);
             AddStateAt(1);
             var stateTransition = new TransitionOne();
-            StateMachine.AddTransition<StateOne, StateTwo>(stateTransition);
+            StateMachine.AddTransition<StateOne, StateTwo>(TransitionActions.TriggerOne, stateTransition);
             StateMachine.SetInitialState<StateOne>();
             StateMachine.Start();
 
             //Act
-            StateMachine.TriggerTransition<TransitionOne>();
+            StateMachine.TriggerTransition(TransitionActions.TriggerOne);
 
             //Assert
             Assert.That(stateTransition.IsTriggered, Is.True);
@@ -31,13 +31,13 @@ namespace Stately.Tests.FsmTests
             AddStateAt(0);
             AddStateAt(1);
 
-            StateMachine.AddTransition<StateOne, StateTwo>(new TransitionOne());
+            StateMachine.AddTransition<StateOne, StateTwo>(TransitionActions.TriggerOne, new TransitionOne());
             StateMachine.SetInitialState<StateOne>();
 
             //Act
 
             //Assert
-            Assert.Throws<StateMachineNotStartedException>(StateMachine.TriggerTransition<TransitionOne>);
+            Assert.Throws<StateMachineNotStartedException>(() => StateMachine.TriggerTransition(TransitionActions.TriggerOne));
         }
 
         [Test]
@@ -47,12 +47,12 @@ namespace Stately.Tests.FsmTests
             AddStateAt(0);
             AddStateAt(1);
 
-            StateMachine.AddTransition<StateOne, StateTwo>(new TransitionOne());
+            StateMachine.AddTransition<StateOne, StateTwo>(TransitionActions.TriggerOne, new TransitionOne());
             StateMachine.SetInitialState<StateOne>();
             StateMachine.Start();
 
             //Act
-            StateMachine.TriggerTransition<TransitionOne>();
+            StateMachine.TriggerTransition(TransitionActions.TriggerOne);
             var entryInSecondState = ((StateTwo) StateMachine.CurrentState).IsUniqueEntryCalled;
 
             //Assert
@@ -66,12 +66,12 @@ namespace Stately.Tests.FsmTests
             AddStateAt(0);
             AddStateAt(1);
 
-            StateMachine.AddTransition<StateOne, StateTwo>(new TransitionOne());
+            StateMachine.AddTransition<StateOne, StateTwo>(TransitionActions.TriggerOne, new TransitionOne());
             StateMachine.SetInitialState<StateOne>();
             StateMachine.Start();
 
             //Act
-            StateMachine.TriggerTransition<TransitionOne>();
+            StateMachine.TriggerTransition(TransitionActions.TriggerOne);
 
             //Assert
             Assert.That(StateMachine.CurrentState.AmountOfEntryCalls, Is.EqualTo(1));
@@ -84,13 +84,13 @@ namespace Stately.Tests.FsmTests
             AddStateAt(0);
             AddStateAt(1);
 
-            StateMachine.AddTransition<StateOne, StateTwo>(new TransitionOne());
+            StateMachine.AddTransition<StateOne, StateTwo>(TransitionActions.TriggerOne, new TransitionOne());
             StateMachine.SetInitialState<StateOne>();
             StateMachine.Start();
             var firstState = StateMachine.CurrentState;
 
             //Act
-            StateMachine.TriggerTransition<TransitionOne>();
+            StateMachine.TriggerTransition(TransitionActions.TriggerOne);
 
             //Assert
             Assert.That(firstState.AmountOfEntryCalls, Is.EqualTo(1));
@@ -103,13 +103,13 @@ namespace Stately.Tests.FsmTests
             AddStateAt(0);
             AddStateAt(1);
 
-            StateMachine.AddTransition<StateOne, StateTwo>(new TransitionOne());
+            StateMachine.AddTransition<StateOne, StateTwo>(TransitionActions.TriggerOne, new TransitionOne());
             StateMachine.SetInitialState<StateOne>();
             StateMachine.Start();
             var firstState = StateMachine.CurrentState;
 
             //Act
-            StateMachine.TriggerTransition<TransitionOne>();
+            StateMachine.TriggerTransition(TransitionActions.TriggerOne);
 
             //Assert
             Assert.That(firstState.IsExitCalled, Is.True);
@@ -122,13 +122,13 @@ namespace Stately.Tests.FsmTests
             AddStateAt(0);
             AddStateAt(1);
 
-            StateMachine.AddTransition<StateOne, StateTwo>(new TransitionOne());
+            StateMachine.AddTransition<StateOne, StateTwo>(TransitionActions.TriggerOne, new TransitionOne());
             StateMachine.SetInitialState<StateOne>();
             StateMachine.Start();
             var firstState = StateMachine.CurrentState;
 
             //Act
-            StateMachine.TriggerTransition<TransitionOne>();
+            StateMachine.TriggerTransition(TransitionActions.TriggerOne);
 
             //Assert
             Assert.That(firstState.AmountOfExitCalls, Is.EqualTo(1));
@@ -142,12 +142,12 @@ namespace Stately.Tests.FsmTests
             StateMachine.AddState(new StateOne(testObject));
             StateMachine.AddState(new StateTwo(testObject));
 
-            StateMachine.AddTransition<StateOne, StateTwo>(new TransitionOne());
+            StateMachine.AddTransition<StateOne, StateTwo>(TransitionActions.TriggerOne, new TransitionOne());
             StateMachine.SetInitialState<StateOne>();
             StateMachine.Start();
 
             //Act
-            StateMachine.TriggerTransition<TransitionOne>();
+            StateMachine.TriggerTransition(TransitionActions.TriggerOne);
 
             //Assert
             Assert.That(testObject.ExitCalledBeforeSecondEntry, Is.True);

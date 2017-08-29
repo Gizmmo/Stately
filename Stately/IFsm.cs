@@ -2,7 +2,7 @@
 
 namespace Stately
 {
-    public interface IFsm<T> where T : IState
+    public interface IFsm<TConcreteState, TTransitionsEnum> where TConcreteState : IState where TTransitionsEnum : struct, IConvertible
     {
         /// <summary>
         /// Gets the amount of states stored in the Fsm
@@ -22,54 +22,41 @@ namespace Stately
         /// <summary>
         /// The current state the state machine is in
         /// </summary>
-        T CurrentState { get; }
+        TConcreteState CurrentState { get; }
 
         /// <summary>
         /// Adds the passed state into the state machine
         /// </summary>
         /// <param name="state">The state to put into the state machine</param>
-        void AddState<TSub>(TSub state) where TSub : T;
+        void AddState<TSub>(TSub state) where TSub : TConcreteState;
 
         /// <summary>
         /// Removes the passed state type from the state machine
         /// </summary>
         /// <typeparam name="TSub">The state to remove from the state machine</typeparam>
-        bool RemoveState<TSub>() where TSub : T;
+        bool RemoveState<TSub>() where TSub : TConcreteState;
 
         /// <summary>
         /// Sets the inital state of the state machine with the type passed
         /// </summary>
         /// <typeparam name="TSub">The type to set the FSM when the machine starts</typeparam>
-        void SetInitialState<TSub>() where TSub : T;
+        void SetInitialState<TSub>() where TSub : TConcreteState;
 
         /// <summary>
         /// Starts the FSM
         /// </summary>
         void Start();
 
-        /// <summary>
-        /// Adds a transition between 2 states
-        /// </summary>
-        /// <typeparam name="TStateFrom">The state that this transiton can be triggered from</typeparam>
-        /// <typeparam name="TStateTo">the state the fsm will go to when the transition completes its trigger</typeparam>
-        /// <param name="transition">The transition to trigger to go between these states</param>
-        void AddTransition<TStateFrom, TStateTo>(ITransition transition)
-            where TStateFrom : T
-            where TStateTo : T;
+        void AddTransition<TStateFrom, TStateTo>(TTransitionsEnum action, ITransition transition)
+            where TStateFrom : TConcreteState
+            where TStateTo : TConcreteState;
 
-        /// <summary>
-        /// Triggers the passed transition for the Fsm's current state
-        /// </summary>
-        /// <typeparam name="TTransition">The transition to trigger</typeparam>
-        void TriggerTransition<TTransition>() where TTransition : ITransition;
+        void AddTransition<TStateFrom, TStateTo>(TTransitionsEnum action, Action transition)
+            where TStateFrom : TConcreteState where TStateTo : TConcreteState;
 
-        /// <summary>
-        /// Removes the passed transition from the passed state, and returns true if it was done successfully.
-        /// </summary>
-        /// <typeparam name="TTransition">The transition to remove</typeparam>
-        /// <typeparam name="TState">The state to remove the transition from</typeparam>
-        /// <returns>True if the transition was removed, false otherwise</returns>
-        bool RemoveTransition<TTransition, TState>() where TTransition : ITransition
-            where TState : T;
+
+        void TriggerTransition(TTransitionsEnum action);
+
+        bool RemoveTransition<TState>(TTransitionsEnum action) where TState : TConcreteState;
     }
 }

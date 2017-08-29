@@ -13,10 +13,10 @@ namespace Stately.Tests.FsmTests
             AddStateAt(0);
             AddStateAt(1);
 
-            StateMachine.AddTransition<StateOne, StateTwo>(new TransitionOne());
+            StateMachine.AddTransition<StateOne, StateTwo>(TransitionActions.TriggerOne, new TransitionOne());
 
             //Act
-            var returnValueOfRemove = StateMachine.RemoveTransition<TransitionOne, StateOne>();
+            var returnValueOfRemove = StateMachine.RemoveTransition<StateOne>(TransitionActions.TriggerOne);
 
             //Assert
             Assert.That(returnValueOfRemove, Is.True);
@@ -30,7 +30,7 @@ namespace Stately.Tests.FsmTests
             AddStateAt(1);
 
             //Act
-            var returnValueOfRemove = StateMachine.RemoveTransition<TransitionOne, StateOne>();
+            var returnValueOfRemove = StateMachine.RemoveTransition<StateOne>(TransitionActions.TriggerOne);
 
             //Assert
             Assert.That(returnValueOfRemove, Is.False);
@@ -44,14 +44,14 @@ namespace Stately.Tests.FsmTests
             AddStateAt(1);
             StateMachine.SetInitialState<StateOne>();
             StateMachine.Start();
-            StateMachine.AddTransition<StateOne, StateTwo>(new TransitionOne());
+            StateMachine.AddTransition<StateOne, StateTwo>(TransitionActions.TriggerOne, new TransitionOne());
 
             //Act
-            StateMachine.RemoveTransition<TransitionOne, StateOne>();
+            StateMachine.RemoveTransition<StateOne>(TransitionActions.TriggerOne);
 
 
             //Assert
-            Assert.Throws<TransitionNotFoundException>(StateMachine.TriggerTransition<TransitionOne>);
+            Assert.Throws<TransitionNotFoundException>(() => StateMachine.TriggerTransition(TransitionActions.TriggerOne));
         }
     }
 }

@@ -4,11 +4,11 @@ using Stately.Exceptions;
 
 namespace Stately
 {
-    public class Fsm<T> : IFsm<T> where T : IState
+    public class Fsm<TConcreteState, TTransitionsEnum> : IFsm<TConcreteState, TTransitionsEnum> where TConcreteState : IState where TTransitionsEnum : struct, IConvertible
     {
-        private StateContainer<T> _currentStateContainer;
+        private StateContainer<TConcreteState, TTransitionsEnum> _currentStateContainer;
 
-        private readonly Dictionary<Type, StateContainer<T>> _states = new Dictionary<Type, StateContainer<T>>();
+        private readonly Dictionary<Type, StateContainer<TConcreteState, TTransitionsEnum>> _states = new Dictionary<Type, StateContainer<TConcreteState, TTransitionsEnum>>();
         
         /// <summary>
         /// Gets the amount of states stored in the Fsm
@@ -23,7 +23,7 @@ namespace Stately
         /// <summary>
         /// The current state the state machine is in
         /// </summary>
-        public T CurrentState => _currentStateContainer == null ? default(T): _currentStateContainer.State;
+        public TConcreteState CurrentState => _currentStateContainer == null ? default(TConcreteState): _currentStateContainer.State;
 
         /// <summary>
         /// Returns true if the Fsm has started
@@ -35,14 +35,14 @@ namespace Stately
         /// Adds the passed state into the state machine
         /// </summary>
         /// <param name="state">The state to put into the state machine</param>
-        public void AddState<TSub>(TSub state) where TSub : T
+        public void AddState<TSub>(TSub state) where TSub : TConcreteState
         {
             var key = state.GetType();
 
             if (_states.ContainsKey(key))
                 throw new DuplicateStateException();
 
-            _states.Add(key, new StateContainer<T>(state));
+            _states.Add(key, new StateContainer<TConcreteState, TTransitionsEnum>(state));
         }
 
 
@@ -50,7 +50,7 @@ namespace Stately
         /// Removes the passed state type from the state machine
         /// </summary>
         /// <typeparam name="TSub">The state to remove from the state machine</typeparam>
-        public bool RemoveState<TSub>() where TSub : T
+        public bool RemoveState<TSub>() where TSub : TConcreteState
         {
             var key = typeof (TSub);
 
@@ -65,7 +65,7 @@ namespace Stately
         /// Sets the inital state of the state machine with the type passed
         /// </summary>
         /// <typeparam name="TSub">The type to set the FSM when the machine starts</typeparam>
-        public void SetInitialState<TSub>() where TSub : T
+        public void SetInitialState<TSub>() where TSub : TConcreteState
         {
             var key = typeof (TSub);
 
@@ -74,7 +74,6 @@ namespace Stately
 
             InitialState = key;
         }
-
 
         /// <summary>
         /// Starts the FSM
@@ -88,57 +87,33 @@ namespace Stately
             IsStarted = true;
         }
 
-        /// <summary>
-        /// Adds a transition between 2 states
-        /// </summary>
-        /// <typeparam name="TStateFrom">The state that this transiton can be triggered from</typeparam>
-        /// <typeparam name="TStateTo">the state the fsm will go to when the transition completes its trigger</typeparam>
-        /// <param name="transition">The transition to trigger to go between these states</param>
-        public void AddTransition<TStateFrom, TStateTo>(ITransition transition)
-            where TStateFrom : T
-            where TStateTo : T
+        
+        public void AddTransition<TStateFrom, TStateTo>(TTransitionsEnum action, ITransition transition) where TStateFrom : TConcreteState where TStateTo : TConcreteState
         {
             var foundStateFromContainer = GetStateContiainer(typeof (TStateFrom));
 
-            var key = typeof (TStateTo);
-            if (!IsStateFound(key))
+            if (!IsStateFound(typeof(TStateTo)))
                 StateNotFound();
 
-            foundStateFromContainer.AddTransition(transition, key);
+            foundStateFromContainer.AddTransition<TStateTo>(action, transition);
+        }
+        
+        public void AddTransition<TStateFrom, TStateTo>(TTransitionsEnum action, Action transition) where TStateFrom : TConcreteState where TStateTo : TConcreteState
+        {
+            AddTransition<TStateFrom, TStateTo>(action, new ActionTransition(transition));
         }
 
-        /// <summary>
-        /// Triggers the passed transition for the Fsm's current state
-        /// </summary>
-        /// <typeparam name="TTransition">The transition to trigger</typeparam>
-        public void TriggerTransition<TTransition>() where TTransition : ITransition
+        public void TriggerTransition(TTransitionsEnum key)
         {
             if (!IsStarted)
                 throw new StateMachineNotStartedException();
 
-            var stateTo = _currentStateContainer.TriggerTransition<TTransition>();
+            var stateTo = _currentStateContainer.TriggerTransition(key);
             SetCurrentState(stateTo);
         }
-
-
-        public void TriggerTransition(Type transition)
-        {
-            if (!IsStarted)
-                throw new StateMachineNotStartedException();
-
-            var stateTo = _currentStateContainer.TriggerTransition(transition);
-            SetCurrentState(stateTo);
-        }
-
-        /// <summary>
-        /// Removes the passed transition from the passed state, and returns true if it was done successfully.
-        /// </summary>
-        /// <typeparam name="TTransition">The transition to remove</typeparam>
-        /// <typeparam name="TState">The state to remove the transition from</typeparam>
-        /// <returns>True if the transition was removed, false otherwise</returns>
-        public bool RemoveTransition<TTransition, TState>()
-            where TTransition : ITransition
-            where TState : T => GetStateContiainer(typeof (TState)).RemoveTransition<TTransition>();
+        
+        public bool RemoveTransition<TState>(TTransitionsEnum action)
+            where TState : TConcreteState => GetStateContiainer(typeof (TState)).RemoveTransition(action);
 
         /// <summary>
         /// Sets the current state to the passed state Type.
@@ -159,9 +134,9 @@ namespace Stately
         /// </summary>
         /// <param name="state">The state type to find the container of</param>
         /// <returns>The state container of the passed state</returns>
-        internal StateContainer<T> GetStateContiainer(Type state)
+        internal StateContainer<TConcreteState, TTransitionsEnum> GetStateContiainer(Type state)
         {
-            StateContainer<T> foundState;
+            StateContainer<TConcreteState, TTransitionsEnum> foundState;
 
             if (!_states.TryGetValue(state, out foundState))
                 StateNotFound();
@@ -182,7 +157,7 @@ namespace Stately
         internal void StateNotFound() => throw new StateNotFoundException();
 
         public bool HasTransition<TStateFrom, TStateTo>()
-            where TStateFrom : T
-            where TStateTo : T => GetStateContiainer(typeof(TStateFrom)).HasTransition<TStateTo>();
+            where TStateFrom : TConcreteState
+            where TStateTo : TConcreteState => GetStateContiainer(typeof(TStateFrom)).HasTransition<TStateTo>();
     }
 }

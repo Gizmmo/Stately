@@ -2,7 +2,7 @@
 
 namespace Stately
 {
-    public interface IStateContainer<T> where T : IState
+    public interface IStateContainer<T, TTransitionsEnum> where T : IState where TTransitionsEnum : struct, IConvertible
     {
         /// <summary>
         /// The state that this container holds.
@@ -17,45 +17,15 @@ namespace Stately
         /// <summary>
         /// Gets the transition from the transition container of the transtions dictionary
         /// </summary>
-        /// <typeparam name="T">The trpe of transition to get</typeparam>
+        /// <param name="key">The key of the transition to get</param>
         /// <returns>The transition of the type store</returns>
-        ITransitionContainer GetTransition<TTransition>() where TTransition : ITransition;
+        ITransitionContainer GetTransition(TTransitionsEnum key);
 
-        /// <summary>
-        /// Gets the transition from the transition container of the transtions dictionary
-        /// </summary>
-        /// <param name="transition">The trpe of transition to get</param>
-        /// <returns>The transition of the type store</returns>
-        ITransitionContainer GetTransition(Type transition);
+        void AddTransition<TStateTo>(TTransitionsEnum key, ITransition transition) where TStateTo : T;
 
+        bool RemoveTransition(TTransitionsEnum key);
 
-        /// <summary>
-        /// Adds a transition to the transition dictionary, which will be stored in a transition container, with also the state that
-        /// it will go to upon completion.
-        /// </summary>
-        /// <param name="transition">The transition to store in the transition Dictionary</param>
-        /// <param name="stateTo">The state the fsm will change to upon completion of the transition.</param>
-        void AddTransition(ITransition transition, Type stateTo);
-
-        /// <summary>
-        /// Removes a transition for the transitions array
-        /// </summary>
-        /// <returns>true if the transition was removed, otherwise false.</returns>
-        bool RemoveTransition<TTransition>() where TTransition : ITransition;
-
-        /// <summary>
-        /// Triggers the Transition searched for, and then return the state the fsm should go to.
-        /// </summary>
-        /// <typeparam name="T">The transition to trigger.</typeparam>
-        /// <returns></returns>
-        Type TriggerTransition<TTransition>() where TTransition : ITransition;
-
-        /// <summary>
-        /// Triggers the Transition searched for, and then return the state the fsm should go to.
-        /// </summary>
-        /// <param name="transition">The transition to trigger</param>
-        /// <returns>The state the fsm should switch to in System.Type</returns>
-        Type TriggerTransition(Type transition);
+        Type TriggerTransition(TTransitionsEnum key);
 
         bool HasTransition<TStateTo>() where TStateTo : T;
     }
