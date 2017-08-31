@@ -102,5 +102,21 @@ namespace Stately.Tests.FsmTests
             //Assert
             Assert.That(isChanged, Is.True);
         }
+        
+        [Test]
+        public void DoesAddingATransitionWithNoTransactionCreateANormalEmptyTransition()
+        {
+            //Arrange
+            AddStateAt(0);
+            AddStateAt(1);
+            var isChanged = false;
+            
+            //Act
+            StateMachine.AddTransition<StateOne, StateTwo>(TransitionActions.TriggerOne);
+            var hasTransition = StateMachine.HasTransition<StateOne, StateTwo>();
+            
+            //Assert
+            Assert.That(hasTransition, Is.True);
+        }
     }
 }

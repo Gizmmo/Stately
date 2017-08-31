@@ -90,7 +90,7 @@ namespace Stately
         
         public void AddTransition<TStateFrom, TStateTo>(TTransitionsEnum action, ITransition transition) where TStateFrom : TConcreteState where TStateTo : TConcreteState
         {
-            var foundStateFromContainer = GetStateContiainer(typeof (TStateFrom));
+            var foundStateFromContainer = GetStateContiainer<TStateFrom>();
 
             if (!IsStateFound(typeof(TStateTo)))
                 StateNotFound();
@@ -98,10 +98,9 @@ namespace Stately
             foundStateFromContainer.AddTransition<TStateTo>(action, transition);
         }
         
-        public void AddTransition<TStateFrom, TStateTo>(TTransitionsEnum action, Action transition) where TStateFrom : TConcreteState where TStateTo : TConcreteState
-        {
-            AddTransition<TStateFrom, TStateTo>(action, new ActionTransition(transition));
-        }
+        public void AddTransition<TStateFrom, TStateTo>(TTransitionsEnum action, Action transition) where TStateFrom : TConcreteState where TStateTo : TConcreteState => AddTransition<TStateFrom, TStateTo>(action, new ActionTransition(transition));
+
+        public void AddTransition<TStateFrom, TStateTo>(TTransitionsEnum action) where TStateFrom : TConcreteState where TStateTo : TConcreteState => AddTransition<TStateFrom, TStateTo>(action, new Transition());
 
         public void TriggerTransition(TTransitionsEnum key)
         {
@@ -113,11 +112,13 @@ namespace Stately
         }
         
         public bool RemoveTransition<TState>(TTransitionsEnum action)
-            where TState : TConcreteState => GetStateContiainer(typeof (TState)).RemoveTransition(action);
+            where TState : TConcreteState => GetStateContiainer<TState>().RemoveTransition(action);
 
         /// <summary>
         /// Sets the current state to the passed state Type.
         /// </summary>
+        internal void SetCurrentState<TState>() where TState : TConcreteState => SetCurrentState(typeof(TState));
+
         internal void SetCurrentState(Type state)
         {
             var foundStateContainer = GetStateContiainer(state);
@@ -128,6 +129,13 @@ namespace Stately
             _currentStateContainer = foundStateContainer;
             CurrentState.OnEntry();
         }
+        
+        /// <summary>
+        /// Returns the CurrentState Container for the passed state type
+        /// </summary>
+        /// <param name="state">The state type to find the container of</param>
+        /// <returns>The state container of the passed state</returns>
+        internal StateContainer<TConcreteState, TTransitionsEnum> GetStateContiainer<TState>() where TState : TConcreteState => GetStateContiainer(typeof(TState));
 
         /// <summary>
         /// Returns the CurrentState Container for the passed state type
@@ -158,6 +166,11 @@ namespace Stately
 
         public bool HasTransition<TStateFrom, TStateTo>()
             where TStateFrom : TConcreteState
-            where TStateTo : TConcreteState => GetStateContiainer(typeof(TStateFrom)).HasTransition<TStateTo>();
+            where TStateTo : TConcreteState => GetStateContiainer<TStateFrom>().HasTransition<TStateTo>();
+
+        public void RemoveAllTransitions<TState>() where TState : TConcreteState
+        {
+            GetStateContiainer<TState>().RemoveAllTransitions();
+        }
     }
 }

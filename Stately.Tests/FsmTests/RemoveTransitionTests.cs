@@ -53,5 +53,22 @@ namespace Stately.Tests.FsmTests
             //Assert
             Assert.Throws<TransitionNotFoundException>(() => StateMachine.TriggerTransition(TransitionActions.TriggerOne));
         }
+
+        [Test]
+        public void DoesRemoveAllTransitionsRemoveAllTheTransitionsFromThePassedState()
+        {
+            //Arrange
+            AddStateAt(0);
+            AddStateAt(1);
+            StateMachine.SetInitialState<StateOne>();
+            StateMachine.AddTransition<StateOne, StateTwo>(TransitionActions.TriggerOne, new TransitionOne());
+            StateMachine.AddTransition<StateOne, StateTwo>(TransitionActions.TriggerTwo, () => {} );
+            
+            //Act
+            StateMachine.RemoveAllTransitions<StateOne>();
+            var hasEitherTransitions = StateMachine.HasTransition<StateOne, StateTwo>();
+            //Assert
+            Assert.That(hasEitherTransitions, Is.False);
+        } 
     }
 }

@@ -46,10 +46,7 @@ namespace Stately
             return foundTransition;
         }
 
-        public bool RemoveTransition(TTransitionsEnum key)
-        {
-            return _transitions.Remove(key);
-        }
+        public bool RemoveTransition(TTransitionsEnum key) => _transitions.Remove(key);
 
         public Type TriggerTransition(TTransitionsEnum transition)
         {
@@ -59,5 +56,7 @@ namespace Stately
         }
 
         public bool HasTransition<TStateTo>() where TStateTo : T => _transitions.Any(transition => transition.Value.StateTo == typeof(TStateTo));
+
+        public void RemoveAllTransitions() => _transitions.Clear();
     }
 }
