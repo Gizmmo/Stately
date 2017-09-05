@@ -18,14 +18,12 @@ namespace Stately
             State = state;
         }
 
-        /// <summary>
-        /// The state that this container holds.
-        /// </summary>
+        /// <inheritdoc />
         public T State { get; }
 
-        /// <summary>
-        /// The amount of transitions stored in transition Dictionary.
-        /// </summary>
+        public bool IsGlobalState { get; set; }
+
+        /// <inheritdoc />
         public int TransitionCount => _transitions.Count;
 
         public void AddTransition<TStateTo>(TTransitionsEnum key, ITransition transition) where TStateTo : T

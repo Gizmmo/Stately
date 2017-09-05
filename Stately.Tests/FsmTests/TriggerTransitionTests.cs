@@ -152,5 +152,34 @@ namespace Stately.Tests.FsmTests
             //Assert
             Assert.That(testObject.ExitCalledBeforeSecondEntry, Is.True);
         }
+
+        [Test]
+        public void GlobalStateDoesNotNeedASetUpTransitionToMoveToThatStateFromAnyState()
+        {
+            StateMachine.AddState(new StateOne());
+            StateMachine.AddGlobalState(new StateTwo());
+
+            StateMachine.SetInitialState<StateOne>();
+            StateMachine.Start();
+
+            //Act
+            StateMachine.TransitionToGlobalState<StateTwo>();
+
+            //Assert
+            Assert.That(StateMachine.CurrentState, Is.TypeOf(typeof(StateTwo)));
+        }
+
+        [Test]
+        public void TransitionToGlobalStateWithANonGlobalStateResultsInNonGlobalStateException()
+        {
+            StateMachine.AddState(new StateOne());
+            StateMachine.AddGlobalState(new StateTwo());
+
+            StateMachine.SetInitialState<StateTwo>();
+            StateMachine.Start();
+
+            //Assert
+            Assert.Throws<NonGlobalStateException>(() => StateMachine.TransitionToGlobalState<StateOne>());
+        }
     }
 }

@@ -10,14 +10,13 @@ namespace Stately
 
         private readonly Dictionary<Type, StateContainer<TConcreteState, TTransitionsEnum>> _states = new Dictionary<Type, StateContainer<TConcreteState, TTransitionsEnum>>();
         
+        /// <inheritdoc />
         /// <summary>
         /// Gets the amount of states stored in the Fsm
         /// </summary>
         public int StateCount => _states.Count;
 
-        /// <summary>
-        /// Gets the type of inital state that will be used when started
-        /// </summary>
+        /// <inheritdoc />
         public Type InitialState { get; private set; }
 
         /// <summary>
@@ -37,12 +36,17 @@ namespace Stately
         /// <param name="state">The state to put into the state machine</param>
         public void AddState<TSub>(TSub state) where TSub : TConcreteState
         {
+            AddStateToMachine(state);
+        }
+
+        private void AddStateToMachine<TSub>(TSub state, bool isGlobal = false) where TSub : TConcreteState
+        {
             var key = state.GetType();
 
             if (_states.ContainsKey(key))
                 throw new DuplicateStateException();
 
-            _states.Add(key, new StateContainer<TConcreteState, TTransitionsEnum>(state));
+            _states.Add(key, new StateContainer<TConcreteState, TTransitionsEnum>(state) { IsGlobalState = isGlobal } );
         }
 
 
@@ -171,6 +175,18 @@ namespace Stately
         public void RemoveAllTransitions<TState>() where TState : TConcreteState
         {
             GetStateContiainer<TState>().RemoveAllTransitions();
+        }
+
+        public void AddGlobalState<TState>(TState state) where TState : TConcreteState
+        {
+            AddStateToMachine(state, true);
+        }
+
+        public void TransitionToGlobalState<TState>() where TState : TConcreteState
+        {
+            if (!GetStateContiainer<TState>().IsGlobalState) throw new NonGlobalStateException("Attempted State was not a global state in this machine");
+
+            SetCurrentState<TState>();
         }
     }
 }

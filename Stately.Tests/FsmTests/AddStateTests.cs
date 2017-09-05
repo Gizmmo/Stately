@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
 using Stately.Exceptions;
+using Stately.Tests.MockData;
 
 namespace Stately.Tests.FsmTests
 {
@@ -23,6 +24,20 @@ namespace Stately.Tests.FsmTests
         }
 
         [Test]
+        public void DoesAddAGlobalStateIncreaseTheStateCount()
+        {
+            //Arrange
+            var amountOfStates = StateMachine.StateCount;
+            
+
+            //Act
+            CreateGlobalState();
+
+            //Assert
+            Assert.That(amountOfStates, Is.EqualTo(StateMachine.StateCount-1));
+        }
+
+        [Test]
         public void DoesAddingAStateThatAlreadyExistsThrowADuplicateStateException()
         {
             //Arrange
@@ -32,6 +47,11 @@ namespace Stately.Tests.FsmTests
 
             //Assert
             Assert.Throws<DuplicateStateException>(AddSimpleState);
+        }
+
+        private void CreateGlobalState()
+        {
+            StateMachine.AddGlobalState(new StateOne());
         }
     }
 }
