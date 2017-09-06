@@ -54,6 +54,9 @@ namespace Stately
         void AddTransition<TStateFrom, TStateTo>(TTransitionsEnum action, Action transition)
             where TStateFrom : TConcreteState where TStateTo : TConcreteState;
 
+        void AddTransition<TStateFrom, TStateTo>(TTransitionsEnum action) 
+            where TStateFrom : TConcreteState
+            where TStateTo : TConcreteState;
 
         void TriggerTransition(TTransitionsEnum action);
 

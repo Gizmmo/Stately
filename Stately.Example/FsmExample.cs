@@ -2,12 +2,18 @@
 {
     public class FsmExample
     {
-        private IFsm<ConcreteClass> _stateMachine;
+        private IFsm<ConcreteClass, ExampleTransitions> _stateMachine;
+
+        public enum ExampleTransitions
+        {
+            ReadyToAction,
+            Stop
+        }
 
         public FsmExample()
         {
             //Create the FSM and some Data class to be refrenced in states
-            _stateMachine = new Fsm<ConcreteClass>();
+            _stateMachine = new Fsm<ConcreteClass, ExampleTransitions>();
             var data = new StateData();
 
             //Add States
@@ -15,8 +21,8 @@
             _stateMachine.AddState(new ActionState(data));
 
             //AddTransitions
-            _stateMachine.AddTransition<IdleState, ActionState>(new ReadyToAction());
-            _stateMachine.AddTransition<ActionState, IdleState>(new Stop());
+            _stateMachine.AddTransition<IdleState, ActionState>(ExampleTransitions.ReadyToAction);
+            _stateMachine.AddTransition<ActionState, IdleState>(ExampleTransitions.Stop);
 
             //Start the Machine
             _stateMachine.SetInitialState<IdleState>();

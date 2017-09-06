@@ -34,7 +34,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Exceptions\DuplicateStateException - Copy.cs" />
+    <Compile Include="Exceptions\NonGlobalStateException.cs" />
     <Compile Include="Exceptions\DuplicateStateException.cs" />
     <Compile Include="Exceptions\DuplicateStateTransitionException.cs" />
     <Compile Include="Exceptions\InitalStateNullException.cs" />
